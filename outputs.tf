@@ -11,3 +11,7 @@ output "ssh_ec2_linux_connect" {
 output "changed_ipv4_history" {
   value = "${data.http.myip.body} -> ${aws_instance.linux.public_ip}"
 }
+
+output "sg_id" {
+  value = aws_security_group.vpn_security.id
+}
