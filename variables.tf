@@ -40,5 +40,9 @@ variable "ec2_amis" {
   }
 }
 
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
 
 
