@@ -4,7 +4,7 @@ data "template_file" "user_data" {
 }
 
 provider "aws" {
-  region  = var.aws_region
+  region = var.aws_region
 }
 
 resource "aws_instance" "linux" {
@@ -14,7 +14,7 @@ resource "aws_instance" "linux" {
   key_name                    = aws_key_pair.vpn_ec2_key.key_name
   user_data                   = data.template_file.user_data.rendered
   vpc_security_group_ids = [
-    aws_security_group.linux_security.id
+    aws_security_group.vpn_security.id
   ]
 
   provisioner "local-exec" {
