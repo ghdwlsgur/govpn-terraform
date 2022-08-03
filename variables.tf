@@ -45,4 +45,6 @@ data "http" "myip" {
 }
 
 
-
+variable "path_to_private_key" {
+  default = "~/.ssh/vpn_ec2_key.pem"
+}
