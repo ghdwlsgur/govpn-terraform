@@ -1,4 +1,5 @@
 
+
 data "template_file" "user_data" {
   template = file(".payload.sh")
 }
@@ -23,15 +24,39 @@ resource "aws_instance" "linux" {
 
   provisioner "local-exec" {
     when        = destroy
-    command     = "rm -rf ~/.ssh/vpn_ec2_key.pem"
+    command     = "rm -rf ~/.ssh/vpn_ec2_key.pem ./outline.json ./sg_rules.tf"
     working_dir = path.module
   }
+
 
   root_block_device {
     volume_size = var.volume_size
   }
 
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "echo $HOME >> /home/ec2-user/test.txt"
+  #   ]
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ec2-user"
+  #     host        = self.public_ip
+  #     private_key = tls_private_key.tls.private_key_openssh
+  #   }
+  # }
+
+  # provisioner "file" {
+  #   source      = pathexpand("~/.ssh/vpn_ec2_key.pem")
+  #   destination = "/home/ec2-user/vpn_ec2_key.pem"
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ec2-user"
+  #     host        = self.public_ip
+  #     private_key = tls_private_key.tls.private_key_openssh
+  #   }
+  # }
   tags = {
     Name = "VPN's Server-${var.aws_region}"
   }
+
 }
