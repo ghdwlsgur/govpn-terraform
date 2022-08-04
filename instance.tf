@@ -54,7 +54,7 @@ resource "aws_instance" "linux" {
 
 resource "null_resource" "command" {
   provisioner "local-exec" {
-    command = "bash ./scripts/.add_sg_rules.sh"
+    command = "bash ./scripts/.add_sg_rules.sh > /dev/null"
   }
   triggers = {
     linux = aws_instance.linux.id
