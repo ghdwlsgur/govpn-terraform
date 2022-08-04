@@ -52,7 +52,7 @@ resource "aws_instance" "linux" {
 
 }
 
-resource "null_resource" "command" {
+resource "null_resource" "add_sg_rules" {
   provisioner "local-exec" {
     command = "bash ./scripts/.add_sg_rules.sh > /dev/null"
   }
@@ -60,3 +60,13 @@ resource "null_resource" "command" {
     linux = aws_instance.linux.id
   }
 }
+
+data "external" "access_key" {
+  program     = ["bash", "${path.module}/scripts/.access_key.sh"]
+  working_dir = path.module
+  depends_on = [
+    null_resource.add_sg_rules
+  ]
+}
+
+
