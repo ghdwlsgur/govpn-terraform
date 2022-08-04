@@ -1,7 +1,7 @@
 variable "instance_type" {
   type        = string
-  description = "t2.micro"
-  default     = "t2.micro"
+  description = "c4.large"
+  default     = "c4.large"
 }
 
 variable "aws_region" {
@@ -42,9 +42,4 @@ variable "ec2_amis" {
 
 data "http" "myip" {
   url = "http://ipv4.icanhazip.com"
-}
-
-
-variable "path_to_private_key" {
-  default = "~/.ssh/vpn_ec2_key.pem"
 }
