@@ -1,7 +1,16 @@
 #!/usr/bin/env bash 
 
-main() {
-	local get_management_port=$(jq ".ManagementUdpPort" outline.json)
+get_outline_info() {
+  local key_pair="~/.ssh/vpn_ec2_key.pem"
+  local ec2_hostname="ec2-user"
+  local outline_file_location="/tmp/outline.json"
+  local destination_location="./"
+
+  scp -o StrictHostKeyChecking=no -i $key_pair $ec2_hostname@$(echo 'aws_instance.linux.public_dns' | terraform console | tr -d '"'):$outline_file_location $destination_location > /dev/null
+}
+
+make_security_rules_tf() {
+  local get_management_port=$(jq ".ManagementUdpPort" outline.json)
 	local get_vpn_port=$(jq ".VpnTcpUdpPort" outline.json)
   local get_my_ip=$(echo "[\"\${chomp(data.http.myip.body)}/32\"]")
 
@@ -36,7 +45,12 @@ resource "aws_security_group_rule" "vpn_udp_port" {
   security_group_id = aws_security_group.vpn_security.id
 }
 EOF
+}
 
-	echo "Done."
+
+
+
+main() {
+	get_outline_info && make_security_rules_tf && $(echo 'terraform apply --auto-approve -lock=false')
 }
 main
