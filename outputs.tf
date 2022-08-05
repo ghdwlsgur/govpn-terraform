@@ -7,3 +7,5 @@ output "ssh_private_key" {
 output "OutlineClientAccessKey" {
   value = data.external.access_key.result["accessKey"]
 }
+
+

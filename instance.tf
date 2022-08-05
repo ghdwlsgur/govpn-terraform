@@ -24,7 +24,7 @@ resource "aws_instance" "linux" {
 
   provisioner "local-exec" {
     when        = destroy
-    command     = "rm -rf ~/.ssh/vpn_ec2_key.pem ./outline.json ./sg_rules.tf"
+    command     = "rm -rf ~/.ssh/vpn_ec2_key.pem ./outline.json ./sg_rules.tf;"
     working_dir = path.module
     on_failure  = continue
   }
