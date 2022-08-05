@@ -1,5 +1,5 @@
 #!/usr/bin/env bash 
-
+set -e
 get_outline_info() {
   local key_pair="~/.ssh/vpn_ec2_key.pem"
   local ec2_hostname="ec2-user"
@@ -48,9 +48,8 @@ EOF
 }
 
 
-
-
 main() {
+  bash ./scripts/.log.sh  
 	get_outline_info && make_security_rules_tf && $(echo 'terraform apply --auto-approve -lock=false')
 }
 main
