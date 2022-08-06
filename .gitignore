@@ -7,3 +7,4 @@ terraform.**
 .terraform.**
 sg_rules.tf
 .history.log
+outline.json 

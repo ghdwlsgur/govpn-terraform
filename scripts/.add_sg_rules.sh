@@ -49,7 +49,6 @@ EOF
 
 
 main() {
-  bash ./scripts/.log.sh  
 	get_outline_info && make_security_rules_tf && $(echo 'terraform apply --auto-approve -lock=false')
 }
 main
