@@ -9,7 +9,8 @@ provider "aws" {
 }
 
 resource "aws_instance" "linux" {
-  ami                         = var.ec2_amis[var.aws_region]
+  # ami                         = var.ec2_amis[var.aws_region]
+  ami                         = var.ec2_ami
   instance_type               = var.instance_type
   associate_public_ip_address = true
   key_name                    = aws_key_pair.vpn_ec2_key.key_name
@@ -36,7 +37,7 @@ resource "aws_instance" "linux" {
 
   provisioner "remote-exec" {
     inline = [
-      "sleep 90"
+      "sleep 120"
     ]
     connection {
       type        = "ssh"
