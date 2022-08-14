@@ -12,7 +12,6 @@ resource "aws_security_group" "vpn_security" {
   }
 }
 
-
 resource "aws_security_group_rule" "inbound" {
   type              = "ingress"
   description       = "Allow SSH port from only my ip"

@@ -37,7 +37,7 @@ resource "aws_instance" "linux" {
 
   provisioner "remote-exec" {
     inline = [
-      "sleep 120"
+      "sleep 100"
     ]
     connection {
       type        = "ssh"
