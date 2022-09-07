@@ -9,7 +9,6 @@ provider "aws" {
 }
 
 resource "aws_instance" "linux" {
-  # ami                         = var.ec2_amis[var.aws_region]
   ami                         = var.ec2_ami
   instance_type               = var.instance_type
   associate_public_ip_address = true
@@ -37,7 +36,7 @@ resource "aws_instance" "linux" {
 
   provisioner "remote-exec" {
     inline = [
-      "sleep 100"
+      "while [ ! -f /tmp/signal ]; do sleep 2; done",
     ]
     connection {
       type        = "ssh"
@@ -55,7 +54,7 @@ resource "aws_instance" "linux" {
 
 resource "null_resource" "add_sg_rules" {
   provisioner "local-exec" {
-    command = "bash ./scripts/.add_sg_rules.sh > /dev/null"
+    command = "bash ./scripts/.add_sg_rules.sh"
   }
   triggers = {
     linux = aws_instance.linux.id
