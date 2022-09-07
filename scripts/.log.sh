@@ -16,7 +16,7 @@ function log {
   
   logName=$LOGNAME
 
-  mkdir -m 0400 -p .history
+  mkdir -p .history
   
   echo '{}' | jq -n \
   --arg instanceId "$instanceId" \
