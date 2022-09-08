@@ -1,5 +1,5 @@
 #!/usr/bin/env bash 
-set -e
+set -e -o pipefail
 
 check_library() {
   echo "Checking Dependencies..."
@@ -10,6 +10,14 @@ check_library() {
   else 
     echo "jq IS INSTALLED ✅"
   fi 
+
+  rsync_path=$(whereis rsync | awk '{ print $2 }')
+  if [ rsync_path == "" ]; then 
+    echo "rsync IS NOT INSTALLED 🚨"
+    exit 
+  else 
+    echo "rsync IS INSTALLED ✅"
+  fi 
 }
 
 
@@ -19,7 +27,7 @@ get_outline_info() {
   local outline_file_location="/tmp/outline.json"
   local destination_location="./"
 
-  scp -o StrictHostKeyChecking=no -i $key_pair $ec2_hostname@$(echo 'aws_instance.linux.public_dns' | terraform console | tr -d '"'):$outline_file_location $destination_location > /dev/null
+  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@$(echo 'aws_instance.linux.public_dns' | terraform console | tr -d '"'):$outline_file_location $destination_location
 }
 
 make_security_rules_tf() {
@@ -62,6 +70,6 @@ EOF
 
 
 main() {
-	check_library && get_outline_info && make_security_rules_tf && $(echo 'terraform apply --auto-approve -lock=false')
+	check_library && get_outline_info > /dev/null && make_security_rules_tf > /dev/null && $(echo 'terraform apply --auto-approve -lock=false') > /dev/null
 }
 main
