@@ -11,8 +11,7 @@ variable "aws_profile" {
 }
 variable "instance_type" {
   type        = string
-  description = "c4.large"
-  default     = "c4.large"
+  description = "EC2's instance type - INPUT VALUE"
 }
 variable "aws_region" {
   type        = string
@@ -20,7 +19,7 @@ variable "aws_region" {
 }
 variable "ec2_ami" {
   type        = string
-  description = "Ec2's image (Linux 2) - INPUT VALUE"
+  description = "EC2's image (Linux 2) - INPUT VALUE"
 }
 
 data "http" "myip" {
