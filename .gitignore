@@ -12,3 +12,6 @@ outline.json
 
 # log folder 
 .history
+
+# doesn't pull to repository (https://github.com/ghdwlsgur/govpn)
+terraform.tfvars.json
