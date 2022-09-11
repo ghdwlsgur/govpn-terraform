@@ -9,6 +9,12 @@ variable "aws_profile" {
   description = "AWS CLI profile"
   default     = "default"
 }
+
+variable "availability_zone" {
+  type        = string
+  description = "EC2's Availability Zone - INPUT VALUE"
+}
+
 variable "instance_type" {
   type        = string
   description = "EC2's instance type - INPUT VALUE"

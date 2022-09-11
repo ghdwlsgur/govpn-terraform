@@ -14,6 +14,7 @@ resource "aws_instance" "linux" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.vpn_ec2_key.key_name
   user_data                   = data.template_file.user_data.rendered
+  availability_zone           = var.availability_zone
   vpc_security_group_ids = [
     aws_security_group.vpn_security.id
   ]
