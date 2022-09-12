@@ -48,7 +48,7 @@ resource "aws_instance" "linux" {
   }
 
   tags = {
-    Name = "VPN's Server-${var.aws_region}"
+    Name = "govpn EC2-${var.aws_region}"
   }
 
 }
