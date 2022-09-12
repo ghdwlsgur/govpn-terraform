@@ -6,9 +6,10 @@ craete_default_tfvars() {
         echo "Create terraform.tfvars.json ✅"
 cat <<EOF > "./terraform.tfvars.json"
 {
-    "aws_region": "us-east-1",
-    "ec2_ami": "ami-0cff7528ff583bf9a",
-    "instance_type": "c4.large"
+    "aws_region": "ap-northeast-2",
+    "ec2_ami": "ami-052f8fc3389e4b751",
+    "instance_type": "t3.small",
+    "availability_zone": "ap-northeast-2c"
 }
 EOF
     fi
