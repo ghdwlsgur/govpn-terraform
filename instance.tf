@@ -48,7 +48,7 @@ resource "aws_instance" "linux" {
   }
 
   tags = {
-    Name = "govpn-EC2-${var.aws_region}"
+    Name = "govpn-ec2-${var.aws_region}"
   }
 
 }
