@@ -6,7 +6,7 @@ sudo service docker start
 sudo chkconfig docker on
 
 set -e -x
-bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)" > /var/log/outline-install.log && touch /tmp/signal
+bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)" > /var/log/outline-install.log
 
 cat > /tmp/outline.json << EOF 
 { 
