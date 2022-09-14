@@ -24,11 +24,21 @@ resource "aws_instance" "linux" {
   }
 
   provisioner "local-exec" {
+    command = "echo ${aws_instance.linux.public_dns} > ${path.module}/terraform.tfstate.d/$(terraform workspace show)/public_dns.txt"
+  }
+
+  provisioner "local-exec" {
     when        = destroy
     command     = "rm -rf ~/.ssh/vpn_ec2_key.pem ./outline.json ./sg_rules.tf"
     working_dir = path.module
     on_failure  = continue
   }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -rf ${path.module}/terraform.tfstate.d/$(terraform workspace show)/public_dns.txt"
+  }
+
 
 
   root_block_device {
