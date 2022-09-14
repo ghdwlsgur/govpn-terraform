@@ -8,4 +8,6 @@ output "OutlineClientAccessKey" {
   value = data.external.access_key.result["accessKey"]
 }
 
-
+output "public_dns" {
+  value = aws_instance.linux.public_dns
+}
