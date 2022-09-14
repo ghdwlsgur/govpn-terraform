@@ -4,6 +4,10 @@ terraform.tfstate.backup
 .terraform 
 .terraform.**
 
+# terraofrm workspace 
+terraform.tfstate.d
+terraform.tfstate.d/**
+
 # security group
 sg_rules.tf
 
