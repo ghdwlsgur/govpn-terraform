@@ -2,6 +2,7 @@
 __timestamp(){
   date "+%Y%m%dT%H%M%S"
 }
+
 function log {
   instanceId=$(echo 'aws_instance.linux.id' | terraform console | tr -d '"')
   instanceType=$(echo 'aws_instance.linux.instance_type' | terraform console | tr -d '"')

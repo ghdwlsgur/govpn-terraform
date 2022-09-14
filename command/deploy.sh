@@ -4,6 +4,7 @@ set -e -o pipefail
 craete_default_tfvars() {
     if [ ! -f ./terraform.tfvars.json ]; then
         echo "Create terraform.tfvars.json ✅"
+        
 cat <<EOF > "./terraform.tfvars.json"
 {
     "aws_region": "ap-northeast-2",
@@ -15,12 +16,12 @@ EOF
     fi
 }
 
-command() {
+execute() {
     terraform apply --auto-approve -lock=false -var-file="terraform.tfvars.json" && bash ./scripts/.log.sh 
 }
 
 main() {
-    craete_default_tfvars && command 
+    craete_default_tfvars && execute
 }
 main
 
