@@ -8,11 +8,11 @@ terraform.tfstate.backup
 terraform.tfstate.d
 terraform.tfstate.d/**
 
-# security group
-sg_rules.tf
-
-# outline info 
+# outputs
+public_dns.txt
+terraform.tfstate.d/**/public_dns.txt 
 outline.json 
+sg_rules.tf
 
 # log folder 
 .history
