@@ -25,9 +25,16 @@ get_outline_info() {
   local key_pair="~/.ssh/vpn_ec2_key.pem"
   local ec2_hostname="ec2-user"
   local outline_file_location="/tmp/outline.json"
-  local destination_location="./"
+  local destination_location="./"  
+  local get_public_dns=`cat public_dns.txt`
 
-  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@$(echo 'aws_instance.linux.public_dns' | terraform console | tr -d '"'):$outline_file_location $destination_location
+  # If terraform uses workspace, executes command that [terraform output] or [terraform console] to bring instance infomation is showed me (known after apply)
+  # so that i save output value and then bring remote-exec during instance provisioning
+
+  # local get_public_dns=$(terraform output -json instance_details | jq ".public_dns" | tr -d '"')
+  
+  # scp -o StrictHostKeyChecking=no -i $key_pair $ec2_hostname@$(echo 'aws_instance.linux.public_dns' | terraform console | tr -d '"'):$outline_file_location $destination_location > /dev/null
+  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@`echo $get_public_dns`:$outline_file_location $destination_location
 }
 
 make_security_rules_tf() {
@@ -70,6 +77,7 @@ EOF
 
 
 main() {
+  
 	check_library && get_outline_info > /dev/null && make_security_rules_tf > /dev/null && $(echo 'terraform apply --auto-approve -lock=false') > /dev/null
 }
 main
