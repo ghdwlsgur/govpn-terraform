@@ -4,7 +4,7 @@ resource "tls_private_key" "tls" {
   rsa_bits  = 4096
 }
 
-resource "aws_key_pair" "vpn_ec2_key" {
-  key_name   = "vpn_ec2_key"
+resource "aws_key_pair" "govpn_key" {
+  key_name   = "govpn_${var.aws_region}"
   public_key = tls_private_key.tls.public_key_openssh
 }
