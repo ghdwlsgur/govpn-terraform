@@ -13,6 +13,7 @@ public_dns.txt
 terraform.tfstate.d/**/public_dns.txt 
 outline.json 
 sg_rules.tf
+module.tf
 
 # log folder 
 .history
