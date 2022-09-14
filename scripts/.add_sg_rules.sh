@@ -26,12 +26,12 @@ get_outline_info() {
   local ec2_hostname="ec2-user"
   local outline_file_location="/tmp/outline.json"
   local destination_location="./"  
-  local get_public_dns=`cat ./terraform.tfstate.d/$(terraform workspace show)/public_dns.txt`
-
+  local get_public_dns=$(if [ `terraform workspace show` == default ]; then echo `cat ./public_dns.txt`; else echo `cat ./terraform.tfstate.d/$(terraform workspace show)/public_dns.txt`; fi)
+  
   # When I uses terraform workspace, executes command that [terraform output] or [terraform console] to bring instance infomation is showed me (known after apply)
   # so that I save output value and then uses remote-exec during instance provisioning
 
-  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@`echo $get_public_dns`:$outline_file_location $destination_location
+  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@$get_public_dns:$outline_file_location $destination_location
 }
 
 make_security_rules_tf() {

@@ -20,25 +20,29 @@ resource "aws_instance" "linux" {
   ]
 
   provisioner "local-exec" {
-    command = "terraform output -raw ssh_private_key > ~/.ssh/${aws_key_pair.vpn_ec2_key.key_name}.pem && chmod 400 ~/.ssh/${aws_key_pair.vpn_ec2_key.key_name}.pem"
-  }
-
-  provisioner "local-exec" {
-    command = "echo ${aws_instance.linux.public_dns} > ${path.module}/terraform.tfstate.d/$(terraform workspace show)/public_dns.txt"
+    command = <<-EOT
+    terraform output -raw ssh_private_key > ~/.ssh/${aws_key_pair.vpn_ec2_key.key_name}.pem && chmod 400 ~/.ssh/${aws_key_pair.vpn_ec2_key.key_name}.pem
+    if [ `terraform workspace show` == default ]; then 
+      echo ${aws_instance.linux.public_dns} > ${path.module}/public_dns.txt
+    else 
+      echo ${aws_instance.linux.public_dns} > ${path.module}/terraform.tfstate.d/`terraform workspace show`/public_dns.txt
+    fi    
+    EOT     
   }
 
   provisioner "local-exec" {
     when        = destroy
-    command     = "rm -rf ~/.ssh/vpn_ec2_key.pem ./outline.json ./sg_rules.tf"
+    command     = <<-EOT
+    rm -rf ~/.ssh/vpn_ec2_key.pem ./outline.json ./sg_rules.tf
+    if [ `terraform workspace show` == default ]; then   
+      rm -rf ${path.module}/public_dns.txt         
+    else 
+      rm -rf ${path.module}/terraform.tfstate.d/`terraform workspace show`/public_dns.txt          
+    fi        
+    EOT    
     working_dir = path.module
     on_failure  = continue
   }
-
-  provisioner "local-exec" {
-    when    = destroy
-    command = "rm -rf ${path.module}/terraform.tfstate.d/$(terraform workspace show)/public_dns.txt"
-  }
-
 
 
   root_block_device {
@@ -47,7 +51,7 @@ resource "aws_instance" "linux" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /tmp/signal ]; do sleep 2; done",
+      "while [ ! -f /tmp/outline.json ]; do sleep 2; done",
     ]
     connection {
       type        = "ssh"
