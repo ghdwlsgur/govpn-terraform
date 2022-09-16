@@ -8,15 +8,4 @@ terraform.tfstate.backup
 terraform.tfstate.d
 terraform.tfstate.d/**
 
-# outputs
-public_dns.txt
-terraform.tfstate.d/**/public_dns.txt 
-outline.json 
-sg_rules.tf
-module.tf
 
-# log folder 
-.history
-
-# doesn't pull to repository (https://github.com/ghdwlsgur/govpn)
-terraform.tfvars.json
