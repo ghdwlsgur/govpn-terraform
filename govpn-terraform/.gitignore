@@ -1,0 +1,13 @@
+# terraform 
+terraform.tfstate
+terraform.tfstate.backup
+.terraform 
+.terraform.**
+
+# terraofrm workspace 
+/terraform.tfstate.d
+/terraform.tfstate.d/**
+
+
+README.md
+
