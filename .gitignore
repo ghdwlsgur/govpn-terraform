@@ -5,7 +5,7 @@ terraform.tfstate.backup
 .terraform.**
 
 # terraofrm workspace 
-terraform.tfstate.d
-terraform.tfstate.d/**
+/terraform.tfstate.d
+/terraform.tfstate.d/**
 
 
