@@ -9,5 +9,3 @@ terraform.tfstate.backup
 /terraform.tfstate.d/**
 
 
-README.md
-
