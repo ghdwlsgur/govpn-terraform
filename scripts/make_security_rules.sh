@@ -33,7 +33,7 @@ get_outline_info() {
   local outline_file_location="/tmp/outline.json"
   
   
-  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@$public_dns:$outline_file_location $path > /dev/null
+  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" "$ec2_hostname"@"$public_dns":"$outline_file_location" "$path" > /dev/null
 }
 
 
