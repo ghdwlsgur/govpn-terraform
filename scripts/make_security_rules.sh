@@ -33,7 +33,7 @@ get_outline_info() {
   local outline_file_location="/tmp/outline.json"
   
   
-  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i "$key_pair"" "$ec2_hostname"@"$public_dns":"$outline_file_location" "$path" > /dev/null
+  rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" $ec2_hostname@$public_dns:$outline_file_location $path > /dev/null
 }
 
 
@@ -43,9 +43,9 @@ my_ip=$(echo "$4")
 make_security_rules() {
   local get_management_port=$(jq ".ManagementUdpPort" "$path"/outline.json)
 	local get_vpn_port=$(jq ".VpnTcpUdpPort" "$path"/outline.json)  
-  local get_my_ip=$(echo "[\""$my_ip"/32\"]")
+  local get_my_ip=$(echo "[\"$my_ip/32\"]")
   
-cat > ""$path"/sg_rules.tf" <<-EOF
+cat > "$path/sg_rules.tf" <<-EOF
 resource "aws_security_group_rule" "management_udp_port" {
   type              = "ingress"
   description       = "Allow SSH port from only my ip"
