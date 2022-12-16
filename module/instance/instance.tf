@@ -51,7 +51,7 @@ resource "aws_instance" "linux" {
 
 resource "null_resource" "add_sg_rules" {
   provisioner "local-exec" {
-    command = "bash ../../scripts/make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${aws_security_group.govpn_security.id} ${chomp(data.http.myip.body)}"
+    command = "bash ../../scripts/make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${aws_security_group.govpn_security.id} ${chomp(data.http.myip.response_body)}"
   }
   triggers = {
     linux = aws_instance.linux.id

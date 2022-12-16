@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "inbound" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  cidr_blocks       = ["${chomp(data.http.myip.response_body)}/32"]
   security_group_id = aws_security_group.govpn_security.id
 }
 
