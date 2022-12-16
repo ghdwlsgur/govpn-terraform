@@ -35,7 +35,8 @@ variable "private_key_openssh" {}
 variable "private_key_pem" {}
 
 data "http" "myip" {
-  url = "http://ipv4.icanhazip.com"
+  url    = "http://ipv4.icanhazip.com"
+  method = "GET"
 }
 
 
