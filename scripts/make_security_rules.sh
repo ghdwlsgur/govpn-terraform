@@ -55,6 +55,15 @@ resource "aws_security_group_rule" "management_udp_port" {
   cidr_blocks       = $get_my_ip
   security_group_id = "$sg_id"
 }
+resource "aws_security_group_rule" "outline_tcp_port" {
+  type              = "ingress"
+  description       = "Allow Outline API TCP port from only my ip"
+  from_port         = $get_management_port
+  to_port           = $get_management_port
+  protocol          = "tcp"
+  cidr_blocks       = $get_my_ip
+  security_group_id = "$sg_id"
+}
 resource "aws_security_group_rule" "vpn_tcp_port" {
   type              = "ingress"
   description       = "Allow TCP port from only my ip"
