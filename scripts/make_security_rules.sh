@@ -48,7 +48,7 @@ make_security_rules() {
 cat > "$path/sg_rules.tf" <<-EOF
 resource "aws_security_group_rule" "management_udp_port" {
   type              = "ingress"
-  description       = "Allow SSH port from only my ip"
+  description       = "Allow Management UDP port from only my ip"
   from_port         = $get_management_port
   to_port           = $get_management_port
   protocol          = "udp"
@@ -57,7 +57,7 @@ resource "aws_security_group_rule" "management_udp_port" {
 }
 resource "aws_security_group_rule" "vpn_tcp_port" {
   type              = "ingress"
-  description       = "Allow SSH port from only my ip"
+  description       = "Allow TCP port from only my ip"
   from_port         = $get_vpn_port
   to_port           = $get_vpn_port
   protocol          = "tcp"
@@ -66,7 +66,7 @@ resource "aws_security_group_rule" "vpn_tcp_port" {
 }
 resource "aws_security_group_rule" "vpn_udp_port" {
   type              = "ingress"
-  description       = "Allow SSH port from only my ip"
+  description       = "Allow UDP port from only my ip"
   from_port         = $get_vpn_port
   to_port           = $get_vpn_port
   protocol          = "udp"
