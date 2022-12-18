@@ -45,24 +45,16 @@ make_security_rules() {
 	local get_vpn_port=$(jq ".VpnTcpUdpPort" "$path"/outline.json)  
   local get_my_ip=$(echo "[\"$my_ip/32\"]")
   
-cat > "$path/sg_rules.tf" <<-EOF
-resource "aws_security_group_rule" "outline_tcp_port" {
+cat > "$path/tcp_ingress_rules.tf" <<-EOF
+resource "aws_security_group_rule" "management_tcp_port" {
   type              = "ingress"
-  description       = "Allow Outline API TCP port from only my ip"
+  description       = "Allow Management TCP port from only my ip"
   from_port         = $get_management_port
   to_port           = $get_management_port
   protocol          = "tcp"
   cidr_blocks       = $get_my_ip
   security_group_id = "$sg_id"
-}
-resource "aws_security_group_rule" "management_udp_port" {
-  type              = "ingress"
-  description       = "Allow Management UDP port from only my ip"
-  from_port         = $get_management_port
-  to_port           = $get_management_port
-  protocol          = "udp"
-  cidr_blocks       = $get_my_ip
-  security_group_id = "$sg_id"
+  lifecycle { create_before_destroy = true }
 }
 resource "aws_security_group_rule" "vpn_tcp_port" {
   type              = "ingress"
@@ -72,6 +64,20 @@ resource "aws_security_group_rule" "vpn_tcp_port" {
   protocol          = "tcp"
   cidr_blocks       = $get_my_ip
   security_group_id = "$sg_id"
+  lifecycle { create_before_destroy = true }
+}
+EOF
+
+cat > "$path/udp_ingress_rules.tf" <<-EOF
+resource "aws_security_group_rule" "management_udp_port" {
+  type              = "ingress"
+  description       = "Allow Management UDP port from only my ip"
+  from_port         = $get_management_port
+  to_port           = $get_management_port
+  protocol          = "udp"
+  cidr_blocks       = $get_my_ip
+  security_group_id = "$sg_id"
+  lifecycle { create_before_destroy = true }
 }
 resource "aws_security_group_rule" "vpn_udp_port" {
   type              = "ingress"
@@ -81,6 +87,7 @@ resource "aws_security_group_rule" "vpn_udp_port" {
   protocol          = "udp"
   cidr_blocks       = $get_my_ip
   security_group_id = "$sg_id"
+  lifecycle { create_before_destroy = true }
 }
 EOF
 
@@ -90,6 +97,6 @@ EOF
 
 
 main() {
-  check_library && get_outline_info && make_security_rules > /dev/null && $(echo 'terraform apply --auto-approve -lock=false') > /dev/null
+  check_library && get_outline_info && make_security_rules > /dev/null 
 }
 main 
