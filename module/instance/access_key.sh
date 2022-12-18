@@ -5,17 +5,9 @@ region="$1"
 path=$(echo ../../terraform.tfstate.d/"$region")
 apiUrl=$(jq ".ApiUrl" "$path"/outline.json | sed 's/\"//g')
 
-create_access_keys() {
-  curl --insecure -X POST "$apiUrl"/access-keys
-}
 
-get_access_keys() {
-  accessKey=$(curl --insecure "$apiUrl" | jq '.[]' | jq '.[0].accessUrl' | sed 's/\"//g')
-}
-
-main() {
-  create_access_keys && get_access_keys && jq -n --arg accessKey "$accessKey" '{"accessKey": $accessKey}' 
-}
+accessKey=$(curl --insecure -sX POST https://43.201.31.119:18823/wi42o8gCZ-nSelFl22IuNw/access-keys | jq '.accessUrl' | sed 's/\"//g')
+jq -n --arg accessKey "$accessKey" '{"accessKey": $accessKey}' 
 
 
 
