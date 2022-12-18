@@ -8,4 +8,7 @@ terraform.tfstate.backup
 /terraform.tfstate.d
 /terraform.tfstate.d/**
 
+# terraform variable json file 
+terraform.tfvars.json
 
+.DS_Store
