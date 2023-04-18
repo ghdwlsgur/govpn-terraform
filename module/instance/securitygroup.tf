@@ -34,3 +34,5 @@ resource "aws_security_group_rule" "outbound" {
   security_group_id = aws_security_group.govpn_security.id
   lifecycle { create_before_destroy = true }
 }
+
+
