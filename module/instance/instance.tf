@@ -46,24 +46,26 @@ resource "aws_instance" "linux" {
   tags = {
     Name = "govpn-ec2-${var.aws_region}"
   }
-
 }
 
-resource "null_resource" "add_sg_rules" {
+resource "null_resource" "make_sg_rules" {
   provisioner "local-exec" {
-    command = "bash ../../scripts/make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${aws_security_group.govpn_security.id} ${chomp(data.http.myip.response_body)} && $(echo 'terraform apply --auto-approve -lock=false') > /dev/null"
+    command = "bash ../../scripts/make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
   }
-  triggers = {
-    linux = aws_instance.linux.id
-  }
+
+  depends_on = [
+    aws_instance.linux
+  ]
 }
 
 data "external" "access_key" {
   program     = ["bash", "access_key.sh", "${var.aws_region}"]
   working_dir = "${path.module}/"
+
   depends_on = [
-    null_resource.add_sg_rules
+    null_resource.make_sg_rules
   ]
 }
+
 
 
