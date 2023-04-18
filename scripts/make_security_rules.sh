@@ -37,8 +37,7 @@ get_outline_info() {
 }
 
 
-sg_id=$(echo "$3")
-my_ip=$(echo "$4")
+my_ip=$(echo "$3")
 
 make_security_rules() {
   local get_management_port=$(jq ".ManagementUdpPort" "$path"/outline.json)
@@ -53,7 +52,7 @@ resource "aws_security_group_rule" "management_tcp_port" {
   to_port           = $get_management_port
   protocol          = "tcp"
   cidr_blocks       = $get_my_ip
-  security_group_id = "$sg_id"
+  security_group_id = module.instance.SecurityGroupID
   lifecycle { create_before_destroy = true }
 }
 resource "aws_security_group_rule" "vpn_tcp_port" {
@@ -63,7 +62,7 @@ resource "aws_security_group_rule" "vpn_tcp_port" {
   to_port           = $get_vpn_port
   protocol          = "tcp"
   cidr_blocks       = $get_my_ip
-  security_group_id = "$sg_id"
+  security_group_id = module.instance.SecurityGroupID
   lifecycle { create_before_destroy = true }
 }
 EOF
@@ -76,7 +75,7 @@ resource "aws_security_group_rule" "management_udp_port" {
   to_port           = $get_management_port
   protocol          = "udp"
   cidr_blocks       = $get_my_ip
-  security_group_id = "$sg_id"
+  security_group_id = module.instance.SecurityGroupID
   lifecycle { create_before_destroy = true }
 }
 resource "aws_security_group_rule" "vpn_udp_port" {
@@ -86,17 +85,20 @@ resource "aws_security_group_rule" "vpn_udp_port" {
   to_port           = $get_vpn_port
   protocol          = "udp"
   cidr_blocks       = $get_my_ip
-  security_group_id = "$sg_id"
+  security_group_id = module.instance.SecurityGroupID
   lifecycle { create_before_destroy = true }
 }
 EOF
-
-
 }
+
 
 
 
 main() {
-  check_library && get_outline_info && make_security_rules > /dev/null 
+  check_library && get_outline_info && make_security_rules 
+  
+  cd $path 
+
+  terraform init -upgrade && terraform apply --auto-approve -lock=false > /dev/null
 }
 main 
