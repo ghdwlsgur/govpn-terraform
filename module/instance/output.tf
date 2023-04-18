@@ -7,3 +7,7 @@ output "OutlineClientAccessKey" {
 output "Region" {
   value = var.aws_region
 }
+
+output "SecurityGroupID" {
+  value = aws_security_group.govpn_security.id
+}
