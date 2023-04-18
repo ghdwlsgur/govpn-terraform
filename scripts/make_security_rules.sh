@@ -97,7 +97,7 @@ EOF
 main() {
   check_library && get_outline_info && make_security_rules 
   
-  cd $path 
+  cd $path/    
 
   terraform init -upgrade && terraform apply --auto-approve -lock=false > /dev/null
 }
