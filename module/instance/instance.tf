@@ -50,7 +50,8 @@ resource "aws_instance" "linux" {
 
 resource "null_resource" "make_sg_rules" {
   provisioner "local-exec" {
-    command = "bash ../../scripts/make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
+    command     = "bash make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
+    working_dir = "${path.module}/external/"
   }
 
   depends_on = [
@@ -58,12 +59,23 @@ resource "null_resource" "make_sg_rules" {
   ]
 }
 
-data "external" "access_key" {
-  program     = ["bash", "access_key.sh", "${var.aws_region}"]
-  working_dir = "${path.module}/"
+resource "null_resource" "apply" {
+  provisioner "local-exec" {
+    command     = "bash -c 'while true; do if [ -f outline.json ]; then terraform apply --auto-approve -lock=false; break; fi; sleep 1; done'"
+    working_dir = "/opt/homebrew/lib/govpn/govpn-terraform/terraform.tfstate.d/${var.aws_region}/"
+  }
 
   depends_on = [
     null_resource.make_sg_rules
+  ]
+}
+
+data "external" "access_key" {
+  program     = ["bash", "access_key.sh", "${var.aws_region}"]
+  working_dir = "${path.module}/external/"
+
+  depends_on = [
+    null_resource.apply
   ]
 }
 
