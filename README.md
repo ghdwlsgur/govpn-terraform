@@ -5,6 +5,8 @@
 
 ### A repository used as a teraform module for [govpn](https://github.com/ghdwlsgur/govpn).
 
+### default file location: `/opt/homebrew/lib/govpn/govpn-terraform`
+
 </div>
 
 # How to Use
