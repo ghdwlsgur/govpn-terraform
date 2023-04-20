@@ -2,28 +2,9 @@
 
 set -e -o pipefail
 
-
-check_library() {
-  echo "Checking Dependencies..."
-  export jq_path=$(whereis jq | awk '{ print $2 }')
-  if [ jq_path == "" ]; then 
-    echo "jq IS NOT INSTALLED 🚨"
-    exit 
-  else 
-    echo "jq IS INSTALLED ✅"
-  fi 
-
-  export rsync_path=$(whereis rsync | awk '{ print $2 }')
-  if [ rsync_path == "" ]; then 
-    echo "rsync IS NOT INSTALLED 🚨"
-    exit 
-  else 
-    echo "rsync IS INSTALLED ✅"
-  fi 
-}
-
 region=$(echo "$1")
 public_dns=$(echo "$2")
+my_ip=$(echo "$3")
 path=$(echo /opt/homebrew/lib/govpn/govpn-terraform/terraform.tfstate.d/"$region")
 
 get_outline_info() {
@@ -33,9 +14,6 @@ get_outline_info() {
     
   rsync -avz -delete -partial -e "ssh -o StrictHostKeyChecking=no -i $key_pair" "$ec2_hostname"@"$public_dns":"$outline_file_location" "$path" > /dev/null
 }
-
-
-my_ip=$(echo "$3")
 
 make_security_rules() {
   local get_management_port=$(jq ".ManagementUdpPort" "$path"/outline.json)
@@ -91,6 +69,6 @@ EOF
 
 
 main() {
-  check_library && get_outline_info && make_security_rules       
+  get_outline_info && make_security_rules       
 }
 main 
