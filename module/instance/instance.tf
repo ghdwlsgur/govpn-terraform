@@ -47,10 +47,9 @@ resource "aws_instance" "linux" {
     Name = "govpn-ec2-${var.aws_region}"
   }
 }
-
-resource "terraform_data" "make_sg_rules" {
+resource "terraform_data" "create_securitygroup_rules" {
   provisioner "local-exec" {
-    command     = "bash make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
+    command     = "bash create_sg_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
     working_dir = "${path.module}/external/"
   }
 
@@ -58,35 +57,22 @@ resource "terraform_data" "make_sg_rules" {
     aws_instance.linux.id
   ]
 }
-
-# resource "null_resource" "make_sg_rules" {
-#   provisioner "local-exec" {
-#     command     = "bash make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
-#     working_dir = "${path.module}/external/"
-#   }
-
-#   depends_on = [
-#     aws_instance.linux
-#   ]
-# }
-
-resource "null_resource" "apply" {
+resource "terraform_data" "apply" {
   provisioner "local-exec" {
     command     = "bash -c 'while true; do if [ -f outline.json ]; then terraform apply --auto-approve -lock=false; break; fi; sleep 1; done'"
     working_dir = "/opt/homebrew/lib/govpn/govpn-terraform/terraform.tfstate.d/${var.aws_region}/"
   }
 
-  depends_on = [
-    terraform_data.make_sg_rules
+  triggers_replace = [
+    terraform_data.create_securitygroup_rules.id
   ]
 }
-
 data "external" "access_key" {
   program     = ["bash", "access_key.sh", "${var.aws_region}"]
   working_dir = "${path.module}/external/"
 
   depends_on = [
-    null_resource.apply
+    terraform_data.apply
   ]
 }
 
