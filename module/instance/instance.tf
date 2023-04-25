@@ -48,16 +48,27 @@ resource "aws_instance" "linux" {
   }
 }
 
-resource "null_resource" "make_sg_rules" {
+resource "terraform_data" "make_sg_rules" {
   provisioner "local-exec" {
     command     = "bash make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
     working_dir = "${path.module}/external/"
   }
 
-  depends_on = [
-    aws_instance.linux
+  triggers_replace = [
+    aws_instance.linux.id
   ]
 }
+
+# resource "null_resource" "make_sg_rules" {
+#   provisioner "local-exec" {
+#     command     = "bash make_security_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
+#     working_dir = "${path.module}/external/"
+#   }
+
+#   depends_on = [
+#     aws_instance.linux
+#   ]
+# }
 
 resource "null_resource" "apply" {
   provisioner "local-exec" {
@@ -66,7 +77,7 @@ resource "null_resource" "apply" {
   }
 
   depends_on = [
-    null_resource.make_sg_rules
+    terraform_data.make_sg_rules
   ]
 }
 
