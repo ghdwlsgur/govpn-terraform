@@ -1,5 +1,3 @@
-
-
 data "template_file" "user_data" {
   template = file("../../scripts/payload.sh")
 }
@@ -47,6 +45,7 @@ resource "aws_instance" "linux" {
     Name = "govpn-ec2-${var.aws_region}"
   }
 }
+
 resource "terraform_data" "create_securitygroup_rules" {
   provisioner "local-exec" {
     command     = "bash create_sg_rules.sh ${var.aws_region} ${aws_instance.linux.public_dns} ${chomp(data.http.myip.response_body)} > /dev/null"
@@ -57,6 +56,7 @@ resource "terraform_data" "create_securitygroup_rules" {
     aws_instance.linux.id
   ]
 }
+
 resource "terraform_data" "apply" {
   provisioner "local-exec" {
     command     = "bash -c 'while true; do if [ -f outline.json ]; then terraform apply --auto-approve -lock=false; break; fi; sleep 1; done'"

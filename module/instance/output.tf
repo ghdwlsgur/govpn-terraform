@@ -1,5 +1,3 @@
-
-
 // module.instance.OutlineClientAccessKey
 output "OutlineClientAccessKey" {
   value = data.external.access_key.result["accessKey"]
