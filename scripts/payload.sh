@@ -14,6 +14,7 @@ cat > /tmp/outline.json << EOF
   "ManagementUdpPort" : $(< /var/log/outline-install.log grep "Management port" | cut -d ',' -f1 | cut -d ' ' -f4), 
   "VpnTcpUdpPort" : $(< /var/log/outline-install.log grep 'Access key port' | cut -d ',' -f1 | cut -d ' ' -f5), 
   "ApiUrl" : "$(< /var/log/outline-install.log grep 'apiUrl' | cut -d '"' -f4)"
+  "CertSha256" : "$(< /var/log/outline-install.log grep 'apiUrl' | cut -d '"' -f8)"
 } 
 EOF
 
