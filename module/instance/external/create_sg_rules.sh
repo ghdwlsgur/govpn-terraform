@@ -5,7 +5,7 @@ set -e -o pipefail
 region=$(echo "$1")
 public_dns=$(echo "$2")
 my_ip=$(echo "$3")
-path=$(echo /opt/homebrew/lib/govpn/govpn-terraform/terraform.tfstate.d/"$region")
+path=$(echo /opt/homebrew/lib/outline-vpn/govpn-terraform/terraform.tfstate.d/"$region")
 
 get_outline_info() {
   local key_pair="~/.ssh/govpn_$(echo "$region").pem"

@@ -2,7 +2,7 @@
 
 
 region="$1"
-path=$(echo /opt/homebrew/lib/govpn/govpn-terraform/terraform.tfstate.d/"$region")
+path=$(echo /opt/homebrew/lib/outline-vpn/govpn-terraform/terraform.tfstate.d/"$region")
 apiUrl=$(jq ".ApiUrl" "$path"/outline.json | sed 's/\"//g')
 
 
