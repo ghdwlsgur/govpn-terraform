@@ -5,10 +5,13 @@ data "template_file" "user_data" {
 resource "aws_instance" "linux" {
   ami                         = var.ec2_ami
   instance_type               = var.instance_type
-  associate_public_ip_address = true
-  key_name                    = var.key_name
-  user_data                   = data.template_file.user_data.rendered
   availability_zone           = var.availability_zone
+  associate_public_ip_address = true
+
+  key_name             = var.key_name
+  user_data            = data.template_file.user_data.rendered
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
+
   vpc_security_group_ids = [
     aws_security_group.govpn_security.id
   ]
