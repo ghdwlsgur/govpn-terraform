@@ -5,6 +5,9 @@ sudo yum install docker -y
 sudo service docker start
 sudo chkconfig docker on
 
+sudo curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm" -o "session-manager-plugin.rpm"
+sudo yum install -y session-manager-plugin.rpm yum-utils 
+
 set -e -x
 sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)" > /var/log/outline-install.log
 
